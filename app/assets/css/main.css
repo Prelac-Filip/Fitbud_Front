@@ -1,0 +1,46 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+@import "tailwindcss-animated";
+@import "tailwindcss-intersect";
+
+@theme static {
+  --font-sans: 'Public Sans', sans-serif;
+  --font-montserrat: 'Montserrat', sans-serif;
+
+  --color-primary-50: #F0FFAD;
+  --color-primary-100: #ECFF99;
+  --color-primary-200: #E9FF85;
+  --color-primary-300: #E5FF70;
+  --color-primary-400: #E1FF5C;
+  --color-primary-500: #DDFF47;
+  --color-primary: #DAFF33;
+  --color-primary-700: #D6FF1F;
+  --color-primary-800: #D2FF0A;
+  --color-primary-900: #C8F500;
+
+  --color-secondary: #FF6663;
+
+  --color-third: #241E4E;
+  
+}
+
+.animate-gradient {
+    background-size: 300%;
+    -webkit-animation: animatedgradient 10s ease infinite alternate;
+    -moz-animation: animatedgradient 10s ease infinite alternate;
+    animation: animatedgradient 10s ease infinite alternate;
+}
+
+@keyframes animatedgradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
