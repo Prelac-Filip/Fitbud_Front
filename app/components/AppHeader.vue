@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui';
 
+const { loggedIn, clear: clearSession } = useUserSession()
+const isLoggedIn = loggedIn.value;
+
 const items = ref<NavigationMenuItem[][]>([
   [
     {
@@ -11,6 +14,11 @@ const items = ref<NavigationMenuItem[][]>([
     }
   ]
 ]);
+
+const logout = async () => {
+  await clearSession();
+  await navigateTo('/login');
+}
 </script>
 
 <template>
@@ -28,9 +36,11 @@ const items = ref<NavigationMenuItem[][]>([
     </template>
 
     <template #right> 
-        <UButton icon="simple-icons:linkedin" size="md" variant="link" color="neutral" to="https://www.linkedin.com/in/prelacfilip/" target="_blank"/>
+      <UButton v-if="isLoggedIn" trailing-icon="fluent:arrow-exit-20-filled" size="md" variant="soft" color="primary" @click="logout()">Logout</UButton>
+      <UButton v-else trailing-icon="fluent:person-20-filled" size="md" variant="soft" color="primary" to="/login">Login</UButton>
+      <!--<UButton icon="simple-icons:linkedin" size="md" variant="link" color="neutral" to="https://www.linkedin.com/in/prelacfilip/" target="_blank"/>-->
 
-        <UColorModeButton />
+      <UColorModeButton />
     </template>
 
     <template #body>

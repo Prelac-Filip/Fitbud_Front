@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/test-utils',
     'nuxt-mail',
+    'nuxt-auth-utils'
   ],
 
   devtools: {

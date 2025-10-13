@@ -1,5 +1,12 @@
 <script lang="ts" setup>
-  const { data: product, pending, error } = await useFetch(() => `http://localhost:8081/exercises`);
+  definePageMeta({
+    middleware: ['authenticated'],
+  });
+
+  const { data: product, pending, error } = await useFetch(() => `http://localhost:8081/exercises`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' }
+  });
 </script>
 
 <template>
