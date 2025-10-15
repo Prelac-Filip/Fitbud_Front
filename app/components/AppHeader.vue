@@ -1,50 +1,50 @@
 <script setup lang="ts">
-import type { NavigationMenuItem } from '@nuxt/ui';
+const route = useRoute()
 
-const { loggedIn, clear: clearSession } = useUserSession()
+const { loggedIn } = useUserSession()
 const isLoggedIn = loggedIn.value;
 
-const items = ref<NavigationMenuItem[][]>([
-  [
-    {
-      label: "Exercises",
-      icon: "fa6-solid:dumbbell",
-      to: "/exercises",
-      inactiveClass: "bg-black",
-    }
-  ]
-]);
 
-const logout = async () => {
-  await clearSession();
-  await navigateTo('/login');
-}
+
+const items = computed(() => [{
+  label: 'Docs',
+  to: '/docs',
+  active: route.path.startsWith('/docs')
+}, {
+  label: 'Pricing',
+  to: '/pricing'
+}, {
+  label: 'Changelog',
+  to: '/changelog'
+}])
 </script>
 
 <template>
   <UHeader>
     <template #left>
-      <div class="flex flex-row justify-center items-center">
-        <NuxtLink to="/">
-          <AppLogo class="w-auto h-14 shrink-0" />
-        </NuxtLink>
-      </div>
+      <NuxtLink to="/">
+        <AppLogo class="w-auto h-6 shrink-0" />
+      </NuxtLink>
+      <TemplateMenu />
     </template>
 
-    <template #default>
-      <UNavigationMenu :items="items" variant="link" class="hidden lg:block" />
-    </template>
+    <UNavigationMenu :items="items" variant="link" />
 
-    <template #right> 
-      <UButton v-if="isLoggedIn" trailing-icon="fluent:arrow-exit-20-filled" size="md" variant="soft" color="primary" @click="logout()">Logout</UButton>
-      <UButton v-else trailing-icon="fluent:person-20-filled" size="md" variant="soft" color="primary" to="/login">Login</UButton>
-      <!--<UButton icon="simple-icons:linkedin" size="md" variant="link" color="neutral" to="https://www.linkedin.com/in/prelacfilip/" target="_blank"/>-->
-
+    <template #right>
       <UColorModeButton />
+
+      <UButton v-if="isLoggedIn" icon="fluent:dual-screen-header-20-regular" color="primary" variant="soft" to="/app/dashboard">Dashboard</UButton>
+      <UButton v-else trailing-icon="fluent:person-20-filled" size="md" variant="soft" color="primary" to="/login">Login</UButton>
+
     </template>
 
     <template #body>
       <UNavigationMenu :items="items" orientation="vertical" class="-mx-2.5" />
+
+      <USeparator class="my-6" />
+
+      <UButton label="Sign in" color="neutral" variant="subtle" to="/login" block class="mb-3" />
+      <UButton label="Sign up" color="neutral" to="/signup" block />
     </template>
   </UHeader>
 </template>

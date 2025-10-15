@@ -2,18 +2,13 @@
 export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
+    '@nuxt/image',
     '@nuxt/ui',
     '@nuxt/content',
-    '@nuxt/scripts',
-    '@nuxt/image',
-    '@nuxt/test-utils',
-    'nuxt-mail',
+    '@vueuse/nuxt',
+    'nuxt-og-image',
     'nuxt-auth-utils'
   ],
-
-  devtools: {
-    enabled: true
-  },
 
   app: {
     pageTransition: { name: "page", mode: "out-in" },
@@ -32,38 +27,30 @@ export default defineNuxtConfig({
     },
   },
 
-  css: ['~/assets/css/main.css'],
-
-  colorMode: {
-    preference: 'dark',
+  devtools: {
+    enabled: true
   },
 
-  runtimeConfig: {
-    emailPass: process.env.NUXT_EMAIL_PASS, 
-    public: {
-      emailUser: process.env.NUXT_PUBLIC_EMAIL_USER,
+  css: ['~/assets/css/main.css'],
+
+  routeRules: {
+    '/docs': { redirect: '/docs/getting-started', prerender: false }
+  },
+
+  compatibilityDate: '2024-07-11',
+
+  nitro: {
+    prerender: {
+      routes: [
+        '/'
+      ],
+      crawlLinks: true
     }
   },
 
-  mail: {
-    message: {
-      to: process.env.NUXT_PUBLIC_EMAIL_USER,
-    },
-    smtp: {
-      host: "smtp.hostinger.com",
-      port: 465,
-      auth: {
-          user: process.env.NUXT_PUBLIC_EMAIL_USER,
-          pass: process.env.NUXT_EMAIL_PASS,
-        },
-    },
+  content: {
+    experimental: { nativeSqlite: true }
   },
-
-  routeRules: {
-    '/': { prerender: true }
-  },
-
-  compatibilityDate: '2025-01-15',
 
   eslint: {
     config: {

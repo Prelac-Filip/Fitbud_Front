@@ -3,7 +3,7 @@ import * as z from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui'
 import { sha3_256 } from 'js-sha3';
 
-const { loggedIn, user, fetch: refreshSession } = useUserSession()
+const { loggedIn, user, fetch: refreshSession } = useUserSession();
 
 definePageMeta({
   layout: 'auth'
@@ -19,8 +19,8 @@ const toast = useToast()
 const fields = [{
   name: 'email',
   type: 'text' as const,
-  label: 'Email/Username',
-  placeholder: 'Enter your email/username',
+  label: 'Email',
+  placeholder: 'Enter your email',
   required: true
 }, {
   name: 'password',
@@ -101,7 +101,7 @@ async function onSubmit(payload: FormSubmitEvent<Schema>) {
     <template #description>
       Don't have an account? <ULink
         to="/signup"
-        class="text-primary-300 font-medium"
+        class="text-primary font-medium"
       >Sign up</ULink>.
     </template>
 
@@ -114,8 +114,10 @@ async function onSubmit(payload: FormSubmitEvent<Schema>) {
     </template>
 
     <template #footer>
-      By signing in, you agree to our 
-      <ULink to="/" class="text-primary font-medium">Terms of Service</ULink>.
+      By signing in, you agree to our <ULink
+        to="/"
+        class="text-primary font-medium"
+      >Terms of Service</ULink>.
     </template>
   </UAuthForm>
 </template>

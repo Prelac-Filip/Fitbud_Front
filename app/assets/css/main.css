@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
-@import "tailwindcss-animated";
-@import "tailwindcss-intersect";
+
+@source "../../../content/**/*";
 
 @theme static {
   --font-sans: 'Public Sans', sans-serif;
@@ -21,26 +21,11 @@
   --color-secondary: #FF6663;
 
   --color-third: #241E4E;
-  
 }
 
-.animate-gradient {
-    background-size: 300%;
-    -webkit-animation: animatedgradient 10s ease infinite alternate;
-    -moz-animation: animatedgradient 10s ease infinite alternate;
-    animation: animatedgradient 10s ease infinite alternate;
-}
-
-@keyframes animatedgradient {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
-
-    100% {
-        background-position: 0% 50%;
-    }
+.dark {
+  --ui-bg: var(--ui-color-neutral-950);
+  --ui-bg-muted: var(--ui-color-neutral-900);
+  --ui-bg-elevated: var(--ui-color-neutral-900);
+  --ui-bg-accented: var(--ui-color-neutral-800);
 }
