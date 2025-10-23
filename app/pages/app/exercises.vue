@@ -22,7 +22,7 @@ const createExerciseCard = (exercise: Exercise) => {
 };
 //console.log(exercises.value);
 const exercisesList = exercises.value?._embedded?.exerciseList ?? [];
-console.log(exercisesList);
+//console.log(exercisesList);
 exercisesList.forEach(exercise => {
   return exerciseCards.value.push(createExerciseCard(exercise));
 });
@@ -49,6 +49,7 @@ exercisesList.forEach(exercise => {
                   index == 2 ? 'animate-fade-left animate-duration-[2500ms] animate-delay-1000 animate-ease-in-out' : ''" 
             />
           </UPageGrid>
+          <ExerciseCard :exercises="exercisesList" />
         </UPageBody>
       </UPage>
     </UContainer>

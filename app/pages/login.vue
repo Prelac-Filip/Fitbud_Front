@@ -81,7 +81,7 @@ async function onSubmit(payload: FormSubmitEvent<Schema>) {
     })
     toast.add({ title: 'Success', description: 'Login successful', color: 'success' });
     await refreshSession();
-    await navigateTo('/exercises');
+    await navigateTo('/app/dashboard');
   }else if (error.value) {
     toast.add({ title: 'Error', description: 'Invalid email or password', color: 'error' });
     return;
