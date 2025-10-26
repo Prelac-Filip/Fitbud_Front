@@ -65,7 +65,7 @@ async function onSubmit(payload: FormSubmitEvent<Schema>) {
   const hash = sha3_256(payload.data.password);
   console.log(hash);
 
-  const { data: user, pending, error } = await useFetch<LoginResponse>(() => `http://localhost:8081/users/login`, {
+  const { data: appUser, pending, error } = await useFetch<LoginResponse>(() => `http://localhost:8081/users/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json; charset=UTF-8' },
     body: JSON.stringify({
@@ -73,11 +73,12 @@ async function onSubmit(payload: FormSubmitEvent<Schema>) {
       password: hash
     })
   });
-  if (user.value) {
-    console.log(user.value);
+  //if the backend returns a user object, log in the user through the nuxt login api
+  if (appUser.value) {
+    console.log(appUser.value);
     await $fetch('/api/login', {
       method: 'POST',
-      body: {id: user.value.id, username: user.value.username, password: hash},
+      body: {id: appUser.value.id, username: appUser.value.username, password: hash},
     })
     toast.add({ title: 'Success', description: 'Login successful', color: 'success' });
     await refreshSession();

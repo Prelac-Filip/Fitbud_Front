@@ -5,6 +5,8 @@ export interface Exercise {
   name: string;
   bodyParts: string[] | string;
   specificBodyParts: string[] | string;
+  repetitions: number;
+  sets: number;
   _links: Links;
   [key: string]: any;
 }

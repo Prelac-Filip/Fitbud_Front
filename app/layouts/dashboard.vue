@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
 
-const {clear: clearSession } = useUserSession()
+const {user, clear: clearSession } = useUserSession()
 const logout = async () => {
   await clearSession();
   await navigateTo('/');
@@ -116,6 +116,8 @@ onMounted(async () => {
       variant: 'ghost'
     }]
   })
+
+  console.log(user.value);
 })
 </script>
 
