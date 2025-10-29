@@ -61,24 +61,28 @@ const createWorkoutFromData = () => {
   }
 };
 
-const exercisesList = ref<Exercise[]>([]);
-const fetchExercises = async () => {
-  const { data: exercises, error } = await useFetch<Exercises>(() => `http://localhost:8081/exercises`, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' }
-  });
-  if (error.value) {
-    useToast().add({ title: 'Error', description: error.value.message, color: 'error' });
-    exercisesList.value = [];
-  } else {
-    exercisesList.value = exercises.value?._embedded?.exerciseList ?? [];
-  }
+const configureWorkoutExercises = (exercise: Exercise) => {
+  if (selectedExercises.value.includes(exercise)) {
+    selectedExercises.value = selectedExercises.value.filter(e => e.id !== exercise.id);
+    console.log("Deselected exercise: ", exercise);
+    return;
+  };
+  selectedExercises.value.push(exercise);
+  console.log("Selected Exercises: ", selectedExercises.value);
 };
 
-// Fetch exercises when the component is mounted
-onMounted(() => {
-  fetchExercises();
+const exercisesList = ref<Exercise[]>([]);
+const { data: exercises } = await useFetch<Exercises>(() => `http://localhost:8081/exercises`, {
+  method: 'GET',
+  headers: { 'Content-Type': 'application/json' }
 });
+if (error.value) {
+  useToast().add({ title: 'Error', description: error.value.message, color: 'error' });
+  exercisesList.value = [];
+} else {
+  exercisesList.value = exercises.value?._embedded?.exerciseList ?? [];
+};
+
 </script>
 
 <template>
@@ -126,12 +130,18 @@ onMounted(() => {
                     <UInput v-model="workoutEta" placeholder="1h 15m" class="w-full"/>
                   </UFormField>
                   <UFormField label="Exercises">
-                    <UModal fullscreen title="Choose Exercises">
+                    <UModal fullscreen title="Choose Exercises" description="Make sure to enter sets and repetitions!"
+                      :close="{
+                        color: 'primary',
+                        variant: 'outline',
+                        class: 'rounded-full',
+                        size: 'sm',
+                      }">
                       <UButton label="Choose Exercises" color="primary" variant="outline" class="w-full justify-center"/>
                       
                       <template #body>
                         <UPageGrid>
-                          <ExerciseCard :exercises="exercisesList" :isWorkoutCreation="{ type: true, default: false }" />
+                          <ExerciseCard :exercises="exercisesList" :isWorkoutCreation="{ type: true, default: false }" @exerciseSelected="configureWorkoutExercises"/>
                         </UPageGrid>
                       </template>
                     </UModal>

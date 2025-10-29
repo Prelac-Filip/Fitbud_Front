@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { Exercise } from '~/types/Exercise';
-import type { Exercises } from '~/types/Exercises';
+
+const emit = defineEmits(['exerciseSelected']);
 
 const props = defineProps<{
   exercises?: Exercise[],
@@ -15,8 +16,13 @@ const addToFavorites = (exercise: Exercise) => {
   //console.log(`Added ${exercise.name} to favorites!`);
 };
 
-const select = (exercise: Exercise) => {
-  return exercise;
+const selectExercise = (exercise: Exercise) => {
+  if (exercise.repetitions === 0 || exercise.sets === 0) {
+    useToast().add({ title: 'Incomplete Selection', description: `Please specify sets and repetitions for ${exercise.name} before selecting it.`, color: 'warning' });
+    return;
+  }
+
+  emit('exerciseSelected', exercise);
 };
 </script>
 
@@ -63,32 +69,34 @@ const select = (exercise: Exercise) => {
       </div>
       <div v-if="isWorkoutCreation" class="mt-2 ">
         <UFormField label="Sets" required>
-          <UInputNumber v-model="exercise.repetitions" :min="0" :max="100" class="w-full"/>
+          <UInputNumber v-model="exercise.repetitions" :min="0" :max="100" class="w-full" />
         </UFormField>
         <UFormField label="Repetitions" required>
-          <UInputNumber v-model="exercise.sets" :min="0" :max="1000" class="w-full"/>
+          <UInputNumber v-model="exercise.sets" :min="0" :max="1000" class="w-full" />
         </UFormField>
       </div>
     </template>
     <template #footer>
       <div v-if="isWorkoutCreation" class="flex justify-end gap-2 mt-1">
-        <UButton icon="fluent:checkmark-20-filled" label="Select" color="primary" variant="subtle" @click="select(exercise)"/>
+        <!--<UButton icon="fluent:checkmark-20-filled" label="Select" color="primary" variant="subtle"
+          @click="$emit('exerciseSelected', exercise)" />-->
+        <USwitch unchecked-icon="i-lucide-x" checked-icon="i-lucide-check" :default-value="false"
+          @change="selectExercise(exercise)" :disabled="(exercise.repetitions === 0 || exercise.sets === 0)"/>
       </div>
       <div v-else class="flex justify-end gap-2 mt-1">
-        <UModal :title="exercise.name + ' details'"
-          :close="{
-            color: 'primary',
-            variant: 'outline',
-            class: 'rounded-full',
-            size: 'sm',
-          }">
+        <UModal :title="exercise.name + ' details'" :close="{
+          color: 'primary',
+          variant: 'outline',
+          class: 'rounded-full',
+          size: 'sm',
+        }">
           <UButton label="Details" color="primary" variant="subtle" class="" />
 
           <template #body>
             Enter more details about the exercise here.
           </template>
         </UModal>
-        <UButton icon="fluent:star-24-regular" color="primary" variant="subtle" @click="addToFavorites(exercise)"/>
+        <UButton icon="fluent:star-24-regular" color="primary" variant="subtle" @click="addToFavorites(exercise)" />
       </div>
     </template>
   </UPageCard>
