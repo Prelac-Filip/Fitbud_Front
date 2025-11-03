@@ -22,7 +22,7 @@ export function createWorkout(data: Partial<Workout>): Workout {
     throw new Error('Cannot create Workout without a name');
   }
   return {
-    id: data.id ?? 0,
+    id: data.id ?? -1,
     name: data.name ?? '',
     exercises: data.exercises ?? [],
     noOfExercises: data.exercises?.length ?? 0,

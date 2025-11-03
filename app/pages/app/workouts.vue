@@ -49,12 +49,43 @@ const workoutName = ref('');
 const workoutEta = ref('');
 const selectedExercises = ref<Exercise[]>([]);
 
-const createWorkoutFromData = () => {
+const createWorkoutFromData = async () => {
   //TODO implement workout creation form and logic
   try {
-    let newWorkout: Workout = createWorkout({});
+    let newWorkout: Workout = createWorkout({
+      id: Math.floor(Math.random() * 10000),
+      name: workoutName.value,
+      etaWorkoutTime: workoutEta.value,
+      exercises: selectedExercises.value,
+    });
     console.log("Creating workout: ", newWorkout);
     //TODO POST request to backend to create new workout
+    const { data: createdWorkout, pending, error } = await useFetch<Workout>(() => `http://localhost:8081/workouts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+      body: JSON.stringify({
+        id: newWorkout.id,
+        name: newWorkout.name,
+        exercises: newWorkout.exercises,
+        noOfExercises: newWorkout.noOfExercises,
+        etaWorkoutTime: newWorkout.etaWorkoutTime,
+        isPremium: newWorkout.premium,
+        isPrivate: newWorkout.private,
+      })
+    });
+    if (error.value) {
+      useToast().add({ title: 'Error', description: error.value.message, color: 'error' });
+      return;
+    } else {
+      useToast().add({ title: 'Success', description: `Workout ${createdWorkout.value?.name} created successfully!`, color: 'success' });
+      //Reset form data
+      workoutName.value = '';
+      workoutEta.value = '';
+      selectedExercises.value = [];
+      openWorkoutModal.value = false;
+      //Refresh the page to show the new workout
+      newWorkoutModal();
+    }
   } catch (error: Error | any) {
     useToast().add({ title: 'Error', description: error.message, color: 'error' });
     return;
@@ -143,6 +174,9 @@ if (error.value) {
                         <UPageGrid>
                           <ExerciseCard :exercises="exercisesList" :isWorkoutCreation="{ type: true, default: false }" @exerciseSelected="configureWorkoutExercises"/>
                         </UPageGrid>
+                      </template>
+                      <template #footer="{ close }">
+                        <UButton label="Done" color="primary" variant="solid" @click="close"/>
                       </template>
                     </UModal>
                   </UFormField>
