@@ -63,7 +63,7 @@ type LoginResponse = {
 
 async function onSubmit(payload: FormSubmitEvent<Schema>) {
   const hash = sha3_256(payload.data.password);
-  console.log(hash);
+  //console.log(hash);
 
   const { data: appUser, pending, error } = await useFetch<LoginResponse>(() => `http://localhost:8081/users/login`, {
     method: 'POST',
@@ -75,7 +75,7 @@ async function onSubmit(payload: FormSubmitEvent<Schema>) {
   });
   //if the backend returns a user object, log in the user through the nuxt login api
   if (appUser.value) {
-    console.log(appUser.value);
+    //console.log(appUser.value);
     await $fetch('/api/login', {
       method: 'POST',
       body: {id: appUser.value.id, username: appUser.value.username, password: hash},

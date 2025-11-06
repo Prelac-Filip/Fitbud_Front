@@ -5,14 +5,18 @@ import type { Workout } from '~/types/Workout';
 import { createWorkout } from '~/types/Workout';
 import type { Exercise } from '~/types/Exercise';
 import type { Exercises } from '~/types/Exercises';
+import type { LoggedUser } from '~/types/LoggedUser';
 
 definePageMeta({
   middleware: ['authenticated'],
   layout: 'dashboard',
 });
 
+const {user} = useUserSession()
 
-const { data: workouts, pending, error } = await useFetch<Workouts>(() => `http://localhost:8081/workouts`, {
+const loggedInUser = user.value as LoggedUser | null;
+
+const { data: workouts, pending, error } = await useFetch<Workouts>(() => `http://localhost:8081/myWorkouts/${loggedInUser?.id}`, {
   method: 'GET',
   headers: { 'Content-Type': 'application/json' }
 });
@@ -118,7 +122,7 @@ if (error.value) {
 
 <template>
   <div class="flex flex-1">
-    <UDashboardPanel id="exercises">
+    <UDashboardPanel id="workouts">
       <template #header>
         <UDashboardNavbar title="Workouts" :ui="{ right: 'gap-3' }">
           <template #leading>
@@ -179,6 +183,23 @@ if (error.value) {
                         <UButton label="Done" color="primary" variant="solid" @click="close"/>
                       </template>
                     </UModal>
+                    <div v-if="selectedExercises.length === 0" class="text-sm text-muted-foreground mt-2">
+                      No exercises selected.
+                    </div>
+                    <div v-else class="flex flex-col gap-2 mt-2">
+                      Selected Exercises:
+                      <div v-for="(exercise, index) in selectedExercises" :key="index" class="flex items-center justify-between p-2 border border-default rounded">
+                        <div>
+                          {{ exercise.name }}
+                        </div>
+                        <div>
+                          Sets: {{ exercise.sets }}
+                        </div>
+                        <div>
+                          Reps: {{ exercise.repetitions }}
+                        </div>
+                      </div>
+                    </div>
                   </UFormField>
                 </div>
               </template>

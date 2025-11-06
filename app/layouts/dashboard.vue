@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
+import type { LoggedUser } from '~/types/LoggedUser';
 
 const {user, clear: clearSession } = useUserSession()
 const logout = async () => {
@@ -11,6 +12,7 @@ const route = useRoute()
 const toast = useToast()
 
 const open = ref(false)
+const loggedInUser = ref<LoggedUser | null>(null);
 
 const links = [[{
   label: 'Home',
@@ -116,8 +118,8 @@ onMounted(async () => {
       variant: 'ghost'
     }]
   })
-
-  console.log(user.value);
+  
+  loggedInUser.value = user.value as LoggedUser | null;
 })
 </script>
 
@@ -126,12 +128,13 @@ onMounted(async () => {
     <UDashboardSidebar id="default" v-model:open="open" collapsible resizable class="bg-elevated/25"
       :ui="{ footer: 'lg:border-t lg:border-default' }">
       <template #header="{ collapsed }">
-        <UTooltip text="Benjamin Canac">
+        <UTooltip :text="loggedInUser?.name">
           <UAvatar
             src="https://github.com/benjamincanac.png"
             alt="Benjamin Canac"
           />
         </UTooltip>
+        <label>{{ loggedInUser?.name }}</label>
       </template>
 
       <template #default="{ collapsed }">
